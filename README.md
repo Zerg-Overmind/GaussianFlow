@@ -32,14 +32,14 @@ cov2D_t_2cov2D_inv_t_1[:, 0, 1] = cov2D_t_2[:, 0] * cov2D_inv_t_1[:, 1] + cov2D_
 cov2D_t_2cov2D_inv_t_1[:, 1, 0] = cov2D_t_2[:, 1] * cov2D_inv_t_1[:, 0] + cov2D_t_2[:, 2] * cov2D_inv_t_1[:, 1]
 cov2D_t_2cov2D_inv_t_1[:, 1, 1] = cov2D_t_2[:, 1] * cov2D_inv_t_1[:, 1] + cov2D_t_2[:, 2] * cov2D_inv_t_1[:, 2]
 
-# isotropic version
+# isotropic version of GaussianFlow
 #predicted_flow_by_gs = (proj_2D_next[gs_per_pixel] - proj_2D[gs_per_pixel].detach()) * weights.detach()
 
-# full formulation
+# full formulation of GaussianFlow
 cov_multi = (cov2D_t_2cov2D_inv_t_1[gs_per_pixel] @ x_mu.permute(0,2,3,1).unsqueeze(-1).detach()).squeeze()
 predicted_flow_by_gs = (cov_multi + proj_2D_next[gs_per_pixel] - proj_2D[gs_per_pixel].detach() - x_mu.permute(0,2,3,1).detach()) * weights.detach()
 
-# flow supervision loss
+# flow supervision loss 
 large_motion_msk = torch.norm(optical_flow, p=2, dim=-1) >= flow_thresh  # flow_thresh = 0.1 or other value to filter out noise, here we assume that we have already loaded pre-computed optical flow somewhere as pseudo GT
 Lflow = torch.norm((optical_flow - predicted_flow_by_gs.sum(0))[large_motion_msk], p=2, dim=-1).mean() 
 loss = loss + flow_weight * Lflow # flow_weight could be 1, 0.1, ... whatever you want.
