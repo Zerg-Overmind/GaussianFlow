@@ -6,9 +6,12 @@ Please refer to [this repo](https://github.com/Zerg-Overmind/diff-gaussian-raste
 For now, we refer the code below to calculate Gaussian flow with variables from above. 
 
 ```python
-### We detach the variables related to t_1 in calculation of GaussianFlow such that the gradient backward only works for variables at t_2 while keeping variables at t_1 unchanged because
+### We detach the variables related to t_1 in calculation of GaussianFlow such that the gradient backward 
+### only works for variables at t_2 while keeping variables at t_1 unchanged because
 ### variables at t_1 have been updated at t_1 - 1 with the same logic. 
-### This can accelerate the training process since less variables needed to be updated. BTW, not detach variables at t_1 will not decrase the performance but slow down the training.
+
+### This can accelerate the training process since less variables needed to be updated. BTW, not detach 
+#### variables at t_1 will not decrase the performance but slow down the training.
 
 # Gaussian parameters at t_1
 proj_2D_t_1 = render_t_1["proj_2D"]
